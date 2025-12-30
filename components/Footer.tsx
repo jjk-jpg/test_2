@@ -6,6 +6,10 @@ interface FooterProps {
 }
 
 const Footer: React.FC<FooterProps> = ({ accentColor }) => {
+  const handlePrevent = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <footer id="contact" className="py-20 bg-[#0A0A0A] border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6">
@@ -20,7 +24,7 @@ const Footer: React.FC<FooterProps> = ({ accentColor }) => {
             </p>
             <div className="flex space-x-6">
               {['Instagram', 'Facebook', 'LinkedIn', 'Twitter'].map(social => (
-                <a key={social} href="#" className="text-gray-500 hover:text-white transition-colors">{social}</a>
+                <button key={social} onClick={handlePrevent} className="text-gray-500 hover:text-white transition-colors">{social}</button>
               ))}
             </div>
           </div>
@@ -37,9 +41,9 @@ const Footer: React.FC<FooterProps> = ({ accentColor }) => {
           <div>
             <h4 className="text-lg font-bold mb-8">정보</h4>
             <ul className="space-y-4 text-gray-500">
-              <li>개용약관</li>
-              <li>개인정보처리방침</li>
-              <li>자주 묻는 질문</li>
+              <li><button onClick={handlePrevent}>이용약관</button></li>
+              <li><button onClick={handlePrevent}>개인정보처리방침</button></li>
+              <li><button onClick={handlePrevent}>자주 묻는 질문</button></li>
             </ul>
           </div>
         </div>

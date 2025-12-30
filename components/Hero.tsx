@@ -7,6 +7,12 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ settings }) => {
+  const handleScrollTo = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
       {/* Background Gradient Orbs */}
@@ -39,20 +45,20 @@ const Hero: React.FC<HeroProps> = ({ settings }) => {
         </p>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-          <a 
-            href="#contact"
+          <button 
+            onClick={(e) => handleScrollTo(e, 'contact')}
             className="group relative px-10 py-5 rounded-full font-bold text-white overflow-hidden transition-all hover:scale-105 active:scale-95"
             style={{ backgroundColor: settings.accentColor }}
           >
             <span className="relative z-10">무료 상담 신청하기</span>
             <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-          </a>
-          <a 
-            href="#portfolio"
+          </button>
+          <button 
+            onClick={(e) => handleScrollTo(e, 'portfolio')}
             className="px-10 py-5 rounded-full font-bold border border-white/20 text-white hover:bg-white/10 transition-all active:scale-95"
           >
             포트폴리오 보기
-          </a>
+          </button>
         </div>
       </div>
 

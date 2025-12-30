@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PortfolioItem, SiteSettings } from '../types';
+import { PortfolioItem, SiteSettings } from '../types.ts';
 
 interface AdminDashboardProps {
   isLoggedIn: boolean;
@@ -28,12 +28,12 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     title: '',
     category: '로고 디자인',
     description: '',
-    imageUrl: 'https://picsum.photos/800/600'
+    imageUrl: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800'
   });
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'admin123') { // Simple mock password
+    if (password === 'admin123') {
       onLogin();
       setError('');
     } else {
@@ -41,7 +41,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     }
   };
 
-  const addPortfolio = () => {
+  const addPortfolio = (e: React.MouseEvent) => {
+    e.preventDefault();
     if (!newPortfolio.title) return;
     const item: PortfolioItem = {
       id: Date.now().toString(),
@@ -51,10 +52,11 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       imageUrl: newPortfolio.imageUrl || `https://picsum.photos/seed/${Date.now()}/800/600`
     };
     setPortfolio([item, ...portfolio]);
-    setNewPortfolio({ title: '', category: '로고 디자인', description: '', imageUrl: 'https://picsum.photos/800/600' });
+    setNewPortfolio({ title: '', category: '로고 디자인', description: '', imageUrl: 'https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=800' });
   };
 
-  const deletePortfolio = (id: string) => {
+  const deletePortfolio = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
     setPortfolio(portfolio.filter(item => item.id !== id));
   };
 
@@ -65,7 +67,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center pt-20">
+      <div className="min-h-screen flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <div className="bg-[#1A1A1A] p-10 rounded-[30px] border border-white/10 w-full max-w-md shadow-2xl">
           <h2 className="text-3xl font-black mb-8 text-center">관리자 로그인</h2>
           <form onSubmit={handleLoginSubmit} className="space-y-6">
@@ -75,7 +77,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-purple-500 outline-none"
+                className="w-full bg-black/40 border border-white/10 rounded-xl px-5 py-4 focus:ring-2 focus:ring-purple-500 outline-none transition-all"
                 placeholder="비밀번호 입력"
               />
             </div>
@@ -103,8 +105,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
         <div className="flex gap-4">
           <button 
-            onClick={() => setIsEditingSettings(!isEditingSettings)}
-            className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all"
+            onClick={(e) => { e.preventDefault(); setIsEditingSettings(!isEditingSettings); }}
+            className="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all font-medium"
           >
             {isEditingSettings ? '포트폴리오 관리' : '기본 설정 편집'}
           </button>
@@ -117,7 +119,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <h3 className="text-2xl font-bold mb-8">사이트 기본 설정</h3>
             <form onSubmit={saveSettings} className="space-y-8">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-3 text-lg font-semibold">메인 헤드라인</label>
+                <label className="block text-sm font-medium text-gray-400 mb-3">메인 헤드라인</label>
                 <textarea 
                   value={settings.heroHeadline}
                   onChange={(e) => setSettings({...settings, heroHeadline: e.target.value})}
@@ -125,7 +127,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-3 text-lg font-semibold">서브 헤드라인</label>
+                <label className="block text-sm font-medium text-gray-400 mb-3">서브 헤드라인</label>
                 <textarea 
                   value={settings.heroSubheadline}
                   onChange={(e) => setSettings({...settings, heroSubheadline: e.target.value})}
@@ -133,7 +135,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-3 text-lg font-semibold">테마 포인트 컬러</label>
+                <label className="block text-sm font-medium text-gray-400 mb-3">테마 포인트 컬러</label>
                 <div className="flex items-center gap-6">
                   <input 
                     type="color"
@@ -146,7 +148,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
               <button 
                 type="submit"
-                className="px-10 py-5 rounded-2xl font-bold text-white transition-all hover:scale-105"
+                className="px-10 py-5 rounded-2xl font-bold text-white transition-all hover:scale-105 active:scale-95"
                 style={{ backgroundColor: accentColor }}
               >
                 변경사항 저장 완료
@@ -156,17 +158,16 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="bg-[#1A1A1A] p-10 rounded-[30px] border border-white/10 flex items-center justify-center text-center">
             <div>
               <div 
-                className="w-32 h-32 rounded-full mx-auto mb-8 animate-pulse"
+                className="w-32 h-32 rounded-full mx-auto mb-8 animate-pulse shadow-lg"
                 style={{ backgroundColor: `${accentColor}40`, border: `4px solid ${accentColor}` }}
               />
-              <h4 className="text-2xl font-bold mb-4">실시간 미리보기 제공 중</h4>
-              <p className="text-gray-500">대시보드에서 수정하는 모든 텍스트와 색상은<br />홈페이지에 즉시 반영됩니다.</p>
+              <h4 className="text-2xl font-bold mb-4">실시간 미리보기 모드</h4>
+              <p className="text-gray-500">대시보드에서 수정하는 모든 내용은<br />홈페이지에 즉시 반영됩니다.</p>
             </div>
           </div>
         </div>
       ) : (
         <div className="space-y-12">
-          {/* New Portfolio Form */}
           <div className="bg-[#1A1A1A] p-10 rounded-[30px] border border-white/10">
             <h3 className="text-2xl font-bold mb-8">새 포트폴리오 추가</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-end">
@@ -177,7 +178,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   placeholder="프로젝트명"
                   value={newPortfolio.title}
                   onChange={(e) => setNewPortfolio({...newPortfolio, title: e.target.value})}
-                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 outline-none"
                 />
               </div>
               <div>
@@ -205,24 +206,23 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
               </div>
               <button 
                 onClick={addPortfolio}
-                className="w-full py-3 rounded-xl font-bold text-white transition-all hover:brightness-110"
+                className="w-full py-3 rounded-xl font-bold text-white transition-all hover:brightness-110 active:scale-95"
                 style={{ backgroundColor: accentColor }}
               >
-                추가하기
+                아이템 추가
               </button>
             </div>
           </div>
 
-          {/* List Portfolio Items */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {portfolio.map((item) => (
-              <div key={item.id} className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/10 group">
-                <div className="h-40 overflow-hidden relative">
-                  <img src={item.imageUrl} className="w-full h-full object-cover" />
+              <div key={item.id} className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/10 group relative">
+                <div className="h-48 overflow-hidden relative">
+                  <img src={item.imageUrl} className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                   <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                      <button 
-                        onClick={() => deletePortfolio(item.id)}
-                        className="p-3 bg-red-500/80 rounded-full hover:bg-red-500 transition-colors"
+                        onClick={(e) => deletePortfolio(e, item.id)}
+                        className="p-3 bg-red-500/80 rounded-full hover:bg-red-500 transition-colors shadow-xl"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
