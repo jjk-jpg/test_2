@@ -99,7 +99,11 @@ const App: React.FC = () => {
     setView(ViewMode.HOME);
   };
 
-  if (!isLoaded) return <div className="bg-black min-h-screen"></div>;
+  if (!isLoaded) return (
+    <div className="bg-black min-h-screen flex items-center justify-center">
+      <div className="text-purple-500 animate-pulse font-bold">LOADING DING STUDIO...</div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-[#050505] text-white selection:bg-purple-500/30">
@@ -111,7 +115,7 @@ const App: React.FC = () => {
         accentColor={settings.accentColor}
       />
 
-      <main className="flex-grow">
+      <main className="flex-grow pt-20">
         {view === ViewMode.HOME ? (
           <>
             <Hero settings={settings} />
